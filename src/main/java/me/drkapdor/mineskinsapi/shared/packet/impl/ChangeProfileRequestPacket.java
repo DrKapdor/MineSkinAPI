@@ -16,19 +16,22 @@ public class ChangeProfileRequestPacket implements IMessagingPacket {
 
     private final PacketType type;
     private final String player;
-    private final GeneratedSkin skin;
+    private final String value;
+    private final String signature;
 
-    public ChangeProfileRequestPacket(PacketType type, String player, GeneratedSkin skin) {
+    public ChangeProfileRequestPacket(PacketType type, String player, String value, String signature) {
         this.type = type;
         this.player = player;
-        this.skin = skin;
+        this.value = value;
+        this.signature = signature;
     }
 
     public ChangeProfileRequestPacket(byte[] byteArray) {
         ByteArrayDataInput input = ByteStreams.newDataInput(byteArray);
         type = PacketType.valueOf(input.readUTF());
         player = input.readUTF();
-        skin = new GeneratedSkin(input.readUTF(), input.readUTF());
+        value = input.readUTF();
+        signature = input.readUTF();
     }
 
     @Override
@@ -41,8 +44,8 @@ public class ChangeProfileRequestPacket implements IMessagingPacket {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(type.toString());
         output.writeUTF(player);
-        output.writeUTF(skin.getValue());
-        output.writeUTF(skin.getSignature());
+        output.writeUTF(value);
+        output.writeUTF(signature);
         return output.toByteArray();
     }
 }

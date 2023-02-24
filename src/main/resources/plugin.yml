@@ -1,8 +1,6 @@
 name: MineSkinAPI
-version: 1.0.0-SNAPSHOT
+version: 1.0.1-RELEASE
 author: DrKapdor
 main: me.drkapdor.mineskinsapi.paper.MineSkinPaperPlugin
 api-version: 1.16
-
-commands:
-  skin:
+description: Программный интерфейс взаимодействия с сервисами MineSkin

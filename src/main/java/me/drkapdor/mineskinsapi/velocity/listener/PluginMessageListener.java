@@ -26,18 +26,27 @@ public class PluginMessageListener {
         if (event.getIdentifier().getId().equals(REQUEST_IDENTIFIER.getId())) {
             String requesterServer = event.getSource().toString().split("> ")[1];
             ChangeProfileRequestPacket requestPacket = new ChangeProfileRequestPacket(event.getData());
-            GeneratedSkin skin = requestPacket.getSkin();
             plugin.getServer().getPlayer(requestPacket.getPlayer()).ifPresentOrElse(player -> {
-                GameProfile.Property skinProperty = new GameProfile.Property("textures", skin.getValue(), skin.getSignature());
+                GameProfile.Property skinProperty = new GameProfile.Property("textures", requestPacket.getValue(), requestPacket.getSignature());
                 player.setGameProfileProperties(Collections.emptyList());
                 player.setGameProfileProperties(Collections.singletonList(skinProperty));
                 plugin.getServer().getServer(requesterServer).ifPresent(server -> {
-                    ChangeProfileResponsePacket responsePacket = new ChangeProfileResponsePacket(PacketType.RESPONSE, requestPacket.getPlayer(), skin, true);
+                    ChangeProfileResponsePacket responsePacket = new ChangeProfileResponsePacket(
+                            PacketType.RESPONSE,
+                            requestPacket.getPlayer(),
+                            new GeneratedSkin(requestPacket.getValue(), requestPacket.getSignature()),
+                            true)
+                            ;
                     server.sendPluginMessage(RESPONSE_IDENTIFIER, responsePacket.toByteArray());
                 });
             }, () -> {
                 plugin.getServer().getServer(requesterServer).ifPresent(server -> {
-                    ChangeProfileResponsePacket responsePacket = new ChangeProfileResponsePacket(PacketType.RESPONSE, requestPacket.getPlayer(), skin,false);
+                    ChangeProfileResponsePacket responsePacket = new ChangeProfileResponsePacket(
+                            PacketType.RESPONSE,
+                            requestPacket.getPlayer(),
+                            new GeneratedSkin(requestPacket.getValue(), requestPacket.getSignature()),
+                            false
+                    );
                     server.sendPluginMessage(RESPONSE_IDENTIFIER, responsePacket.toByteArray());
                 });
             });

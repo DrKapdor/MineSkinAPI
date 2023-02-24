@@ -68,21 +68,5 @@ public class MineSkinPaperPlugin extends JavaPlugin implements IMineSkinPlugin {
         Messenger messenger = Bukkit.getMessenger();
         messenger.registerIncomingPluginChannel(this, "msa:response", new PluginMessagesListener());
         messenger.registerOutgoingPluginChannel(this, "msa:request");
-
-        getCommand("skin").setExecutor((sender, cmd, label, args) -> {
-            if (sender instanceof Player player) {
-                if (sender.isOp()) {
-                    if (args.length == 1) {
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.YELLOW + "Запрос принят в обработку, ожидайте..."));
-                        mineSkinApi.getClient().uploadSkin(args[0]).thenAccept(skin -> {
-                            ChangeProfileRequestPacket requestPacket = new ChangeProfileRequestPacket(PacketType.REQUEST, sender.getName(), skin);
-                            getServer().sendPluginMessage(instance, "msa:request", requestPacket.toByteArray());
-                        });
-                    } else
-                        player.sendMessage(ChatColor.RED + "Используйте: " + ChatColor.GOLD + "/" + label + " <url>");
-                } else player.sendMessage(ChatColor.RED + "У Вас недостаточно полномочий!");
-            }
-            return true;
-        });
     }
 }
