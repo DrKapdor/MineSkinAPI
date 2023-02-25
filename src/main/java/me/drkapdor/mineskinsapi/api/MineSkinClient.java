@@ -7,6 +7,7 @@ import me.drkapdor.mineskinsapi.api.skin.GeneratedSkin;
 import me.drkapdor.mineskinsapi.paper.MineSkinConfig;
 import me.drkapdor.mineskinsapi.paper.MineSkinPaperPlugin;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -48,6 +49,12 @@ public class MineSkinClient {
                         .addTextBody("visibility", "1")
                         .addTextBody("url", url).build();
                 uploadRequest.setEntity(entity);
+                RequestConfig requestConfig = RequestConfig.custom()
+                        .setConnectionRequestTimeout(3000)
+                        .setConnectTimeout(3000)
+                        .setSocketTimeout(3000)
+                        .build();
+                uploadRequest.setConfig(requestConfig);
                 CloseableHttpClient client = HttpClients.createDefault();
                 CloseableHttpResponse response = client.execute(uploadRequest);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -59,7 +66,10 @@ public class MineSkinClient {
                     value = texture.get("value").getAsString();
                     signature = texture.get("signature").getAsString();
                 } else {
-                    MineSkinPaperPlugin.getInstance().getLogger().warning("Не удалось подгрузить скин: " + response.getStatusLine());
+                    MineSkinPaperPlugin.getInstance().getLogger().warning(
+                            "Не удалось подгрузить скин: " +
+                                    response.getStatusLine().getStatusCode() + " (" +
+                                    response.getStatusLine().getReasonPhrase() + ")");
                 }
                 response.close();
                 client.close();

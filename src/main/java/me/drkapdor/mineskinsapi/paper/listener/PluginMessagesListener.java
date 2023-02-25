@@ -17,12 +17,13 @@ public class PluginMessagesListener implements PluginMessageListener {
     public void onPluginMessageReceived(@NotNull String channel, @NotNull Player receiver, byte @NotNull [] byteArray) {
         if (channel.equalsIgnoreCase(RESPONSE_IDENTIFIER)) {
             ChangeProfileResponsePacket responsePacket = new ChangeProfileResponsePacket(byteArray);
-            Bukkit.getPluginManager().callEvent(new SkinReceivedEvent(responsePacket.getSkin(), responsePacket.isSuccess()));
+            Player requester = Bukkit.getPlayerExact(responsePacket.getPlayer());
+            Bukkit.getPluginManager().callEvent(new SkinReceivedEvent(requester, responsePacket.getSkin(), responsePacket.isSuccess()));
             if (responsePacket.isSuccess()) {
                 Player target = Bukkit.getPlayerExact(responsePacket.getPlayer());
                 if (target != null && target.isOnline()) {
                     GeneratedSkin skin = responsePacket.getSkin();
-                    SkinApplicationPrepareEvent prepareEvent = new SkinApplicationPrepareEvent(skin);
+                    SkinApplicationPrepareEvent prepareEvent = new SkinApplicationPrepareEvent(requester, skin);
                     Bukkit.getPluginManager().callEvent(prepareEvent);
                     if (!prepareEvent.isCancelled()) {
                         if (!skin.isEmpty()) {

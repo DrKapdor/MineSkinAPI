@@ -35,8 +35,7 @@ public class PluginMessageListener {
                             PacketType.RESPONSE,
                             requestPacket.getPlayer(),
                             new GeneratedSkin(requestPacket.getValue(), requestPacket.getSignature()),
-                            true)
-                            ;
+                            true);
                     server.sendPluginMessage(RESPONSE_IDENTIFIER, responsePacket.toByteArray());
                 });
             }, () -> {

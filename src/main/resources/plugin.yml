@@ -1,5 +1,5 @@
 name: MineSkinAPI
-version: 1.0.1-RELEASE
+version: 1.0.5-RELEASE
 author: DrKapdor
 main: me.drkapdor.mineskinsapi.paper.MineSkinPaperPlugin
 api-version: 1.16

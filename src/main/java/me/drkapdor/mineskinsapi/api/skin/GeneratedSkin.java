@@ -18,7 +18,7 @@ public class GeneratedSkin  {
 
     @Override
     public String toString() {
-        return "GeneratedSkin{value=\""+ value +"\", signature\"" + signature + "\"}";
+        return "GeneratedSkin{value=\""+ value +"\", signature=\"" + signature + "\"}";
     }
 
 }
